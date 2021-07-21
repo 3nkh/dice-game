@@ -1,3 +1,5 @@
+//togloom duussan esehig hadgaldag huvisagch
+var isGameOver;
 // Тоглогчын ээлжийг хадгалах хувьсагч, нэгдүгээр тоглогчыг 0, хоёрдугаар тоглогчыг 1 гэж тэмдэглэе
 var activePlayer = 0;
 //Тоглогчдын цуглуулсан оноог хадгалах хувьсагч
@@ -8,6 +10,8 @@ var diceDom = document.querySelector(".dice");
 newGame();
 
 function newGame() {
+  //togloom ehellee gedeg tolovt oruulna
+  isGameOver = false;
   //Шооны аль талаараа буусныг хадглах хувьсагч хэрэгтэй, 1ээс 6 гэсэн утгыг энэ хувьсагчид санамсаргүйгээр үүсгэж өгнө.
   //Програм эхлэхэд бэлэн болгох
 
@@ -30,37 +34,50 @@ function newGame() {
 }
 //shoog shideh event listener
 document.querySelector(".btn-roll").addEventListener("click", function () {
-  diceDom.style.display = "block"; //shoonii zurgiig web der haragddag bolgo bna
-  // 1 oos 6 hurtel sanamsargui tiig gargana
-  var diceNumber = Math.floor(Math.random() * 6) + 1;
-  //buusan sanamsargui toond hargalzah shoonii zurgiig web deer gargaj irne
-  diceDom.src = "dice-" + diceNumber + ".png";
-  //buusan too ni 1 ee ylgaatai bol tologchiin eeljiin onoog nemegduulne.
+  if (isGameOver === false) {
+    diceDom.style.display = "block"; //shoonii zurgiig web der haragddag bolgo bna
+    // 1 oos 6 hurtel sanamsargui tiig gargana
+    var diceNumber = Math.floor(Math.random() * 6) + 1;
+    //buusan sanamsargui toond hargalzah shoonii zurgiig web deer gargaj irne
+    diceDom.src = "dice-" + diceNumber + ".png";
+    //buusan too ni 1 ee ylgaatai bol tologchiin eeljiin onoog nemegduulne.
 
-  if (diceNumber !== 1) {
-    //1 ээс ялгаатай тоо буулаа. Буусан тоог тоглогчид нэмж өгнө.
-    roundScore += diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
+    if (diceNumber !== 1) {
+      //1 ээс ялгаатай тоо буулаа. Буусан тоог тоглогчид нэмж өгнө.
+      roundScore += diceNumber;
+      document.getElementById("current-" + activePlayer).textContent =
+        roundScore;
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Game is over, click NEW GAME ");
   }
 });
 
 document.querySelector(".btn-hold").addEventListener("click", function () {
-  scores[activePlayer] += roundScore;
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  //ug toglogchiin hojson esehiig shalgah
-  if (scores[activePlayer] >= 10) {
-    document.getElementById("name-" + activePlayer).textContent = "WINNER";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.toggle("winner");
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.toggle("active");
+  if (isGameOver === false) {
+    scores[activePlayer] += roundScore;
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    //ug toglogchiin hojson esehiig shalgah
+    if (scores[activePlayer] >= 10) {
+      document.getElementById("name-" + activePlayer).textContent = "WINNER";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.toggle("winner");
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.toggle("active");
+      //togloomiig dussan tolovt oruulna
+
+      document.getElementById("current-" + activePlayer).textContent = "0";
+      isGameOver = true;
+    } else {
+      switchToNextPlayer();
+    }
   } else {
-    switchToNextPlayer();
+    alert("Game is over, click NEW GAME ");
   }
 });
 document.querySelector(".btn-new").addEventListener("click", newGame);
